@@ -14,6 +14,6 @@ if (file_exists($config)) {
     $commands = Yaml::parse(file_get_contents($config));
 }
 
-$handler = new \Aequasi\HookHandler\Handler($commands, __FILE__);
+$handler = new \Aequasi\HookHandler\Handler($commands, basename(__FILE__));
 
 $handler->run();
