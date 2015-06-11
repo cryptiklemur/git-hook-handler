@@ -1,0 +1,30 @@
+{
+    "name": "aequasi/git-hook-handler",
+    "description": "Git Hook Handler",
+    "type": "library",
+    "license": "Apache",
+    "authors": [
+        {
+            "name":  "Aaron Scherer",
+            "email": "aequasi@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "symfony/console": ">=2.3.0,<2.8.0",
+        "symfony/process": ">=2.3.0,<2.8.0",
+        "symfony/yaml":    ">=2.3.0,<2.8.0"
+    },
+    "require-dev": {
+        "composer/composer": "~1.0@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Aequasi\\HookHandler\\": "src/"
+        }
+    },
+    "scripts": {
+        "pre-update-cmd":  "Aequasi\\HookHandler\\HookScript::install",
+        "pre-install-cmd": "Aequasi\\HookHandler\\HookScript::install"
+    }
+}

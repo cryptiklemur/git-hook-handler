@@ -1,0 +1,19 @@
+#!/usr/bin/env php
+<?php
+
+$baseDir = realpath(__DIR__ . (basename(realpath(__DIR__.'/../')) === '.git' ? '/../../' : '/../'));
+
+require_once $baseDir . '/vendor/autoload.php';
+
+use Symfony\Component\Yaml\Yaml;
+
+
+$config = $baseDir.'/git-hooks.yml';
+$commands = [];
+if (file_exists($config)) {
+    $commands = Yaml::parse(file_get_contents($config));
+}
+
+$handler = new \Aequasi\HookHandler\Handler($commands, __FILE__);
+
+$handler->run();
