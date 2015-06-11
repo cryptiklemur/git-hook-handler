@@ -11,3 +11,12 @@ pre-commit:
 post-merge:
     - bldr run compileAssets
 ```
+
+and then place the following in your composer.json, then run `composer install` or `composer update`
+
+```json
+    "scripts": {
+        "pre-update-cmd":  "Aequasi\\HookHandler\\HookScript::install",
+        "pre-install-cmd": "Aequasi\\HookHandler\\HookScript::install"
+    }
+```

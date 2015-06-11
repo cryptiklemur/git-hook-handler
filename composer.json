@@ -22,9 +22,5 @@
         "psr-4": {
             "Aequasi\\HookHandler\\": "src/"
         }
-    },
-    "scripts": {
-        "pre-update-cmd":  "Aequasi\\HookHandler\\HookScript::install",
-        "pre-install-cmd": "Aequasi\\HookHandler\\HookScript::install"
     }
 }

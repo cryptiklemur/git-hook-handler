@@ -30,6 +30,7 @@ class HookScript
 
         foreach (['pre-commit', 'post-merge'] as $file) {
             $gitFile    = $gitDir.'/hooks/'.$file;
+            $event->getIO()->write("Creating $gitFile");
 
             $scriptHook = file_get_contents($scriptFile);
             if (!file_exists($gitFile) || $scriptHook !== file_get_contents($gitFile)) {
