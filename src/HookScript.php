@@ -26,6 +26,8 @@ class HookScript
             return false;
         }
 
+        mkdir($gitDir.'/hooks');
+
         $scriptFile = __DIR__.'/../scripts/hook';
 
         foreach (['pre-commit', 'post-merge'] as $file) {
