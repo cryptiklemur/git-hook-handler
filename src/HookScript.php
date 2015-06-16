@@ -26,7 +26,9 @@ class HookScript
             return false;
         }
 
-        mkdir($gitDir.'/hooks');
+        if (!file_exists($gitDir.'/hooks')) {
+            mkdir($gitDir.'/hooks');
+        }
 
         $scriptFile = __DIR__.'/../scripts/hook';
 
