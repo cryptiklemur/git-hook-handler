@@ -1,29 +1,12 @@
 # git-hook-handler
 
-## Installation
-
-Since this lib is a fork of `aequasi/git-hook-handler`, you must register this repository in your `composer.json` file
-
-```json
-# composer.json
-	...
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/acseo/git-hook-handler"
-        }
-    ],
-    ...
-    "require-dev": {
-        "aequasi/git-hook-handler": "^1.0",    
-    ...
-```
-
 ## Usage
 Just create a `git-hooks.yml` file in your projects base directory, and fill it with an array of commands you want to run:
 
 ```yaml
 # git-hook.yml
+config:
+    commit-on-error : true # or false
 pre-commit:
     phpunit:
         description : 'Run PHPUnit'

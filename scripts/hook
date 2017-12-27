@@ -7,7 +7,6 @@ require_once $baseDir . '/vendor/autoload.php';
 
 use Symfony\Component\Yaml\Yaml;
 
-
 $config = $baseDir.'/git-hooks.yml';
 $commands = [];
 if (file_exists($config)) {
@@ -16,4 +15,10 @@ if (file_exists($config)) {
 
 $handler = new \Aequasi\HookHandler\Handler($commands, basename(__FILE__));
 
-$handler->run();
+$exitCode = $handler->run();
+
+if (isset($commands['config']) && isset($command['config']['commit-on-error']) && $command['config']['commit-on-error']) {
+    exit(0);
+}
+
+exit($exitCode);
