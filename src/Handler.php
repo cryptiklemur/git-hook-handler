@@ -62,14 +62,16 @@ class Handler extends Application
             $this->categories[$this->hook] = [];
         }
 
-        foreach ($this->categories[$this->hook] as $command) {
-            $output->writeln("<comment> Running $this->hook hook </comment>");
+        $output->writeln("<comment>Running $this->hook hook </comment>");
+        foreach ($this->categories[$this->hook] as $group => $groupData) {
 
-            $process = new Process($command, __DIR__ . '../../');
+            $output->writeln(['', "<comment> $group hook </comment> : ".$groupData['description']]);
+
+            $process = new Process($groupData['command'], __DIR__ . '../../');
             $process->setTimeout(null);
-            $output->write($command."......");
+            $output->writeln([" <comment>Executed command :</comment>",'']);
+            $output->writeln("  ".str_replace('&&', "&& \\ \n ", $groupData['command']));
             if ($process->run() === 1) {
-
                 $output->writeln(' Failed.');
                 $output->writeln("<error>{$command} failed</error>");
                 $output->writeln($process->getOutput());
@@ -77,7 +79,20 @@ class Handler extends Application
 
                 return 1;
             }
-            $output->writeln(' Success.');
+
+            $output->writeln([" <comment>Command Result :</comment>",'']);
+
+            $output->writeln("  ".$process->getOutput());
+
+            $exitCode = $process->getExitCode();
+            if (isset($groupData['exitcode']) && $groupData['exitcode'] != $exitCode) {
+                $output->writeln("<error>Result is different than expected. Exiting");
+                return -1;
+            }
+            else {
+                $output->writeln(' Success.');
+                return 0;
+            }
         }
 
         $output->writeln(
