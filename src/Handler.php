@@ -65,7 +65,7 @@ class Handler extends Application
         foreach ($this->categories[$this->hook] as $command) {
             $output->writeln("<comment> Running $this->hook hook </comment>");
 
-            $process = new Process($command, __DIR__ . '../../');
+            $process = new Process($command, __DIR__ . '/../../../../');
             $process->setTimeout(null);
             $output->write($command."......");
             if ($process->run() === 1) {
