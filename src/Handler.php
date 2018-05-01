@@ -67,7 +67,7 @@ class Handler extends Application
 
             $output->writeln(['', "<comment> $group hook </comment> : ".$groupData['description']]);
 
-            $process = new Process($groupData['command'], __DIR__ . '../../');
+            $process = new Process($groupData['command'], __DIR__ . '../../../../');
             $process->setTimeout(null);
             $output->writeln([" <comment>Executed command :</comment>",'']);
             $output->writeln("  ".str_replace('&&', "&& \\ \n ", $groupData['command']));
