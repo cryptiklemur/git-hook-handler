@@ -2,7 +2,7 @@
     "name": "aequasi/git-hook-handler",
     "description": "Git Hook Handler",
     "type": "library",
-    "license": "Apache",
+    "license": "Apache-2.0",
     "authors": [
         {
             "name":  "Aaron Scherer",
