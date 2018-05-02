@@ -62,24 +62,42 @@ class Handler extends Application
             $this->categories[$this->hook] = [];
         }
 
-        foreach ($this->categories[$this->hook] as $command) {
-            $output->writeln("<comment> Running $this->hook hook </comment>");
-
-            $process = new Process($command, __DIR__ . '/../../../../');
-            $process->setTimeout(null);
-            $output->write($command."......");
-            if ($process->run() === 1) {
-
-                $output->writeln(' Failed.');
-                $output->writeln("<error>{$command} failed</error>");
-                $output->writeln($process->getOutput());
-                $output->writeln("<error>{$command} failed</error>");
-
-                return 1;
+        $output->writeln("<comment>Running $this->hook hook </comment>");
+        $error = false;
+        foreach ($this->categories[$this->hook] as $hookItem) {
+            if (is_array($hookItem)) {
+                $group = key($hookItem);
+                $groupData = $hookItem[$group];
             }
-            $output->writeln(' Success.');
-        }
+            else {
+                $group = "Unnamed";
+                $groupData = [
+                    'description' => 'This hook was not named in git-hooks.yml file.',
+                    'command' => $hookItem
+                ];
+            }
 
+            $output->writeln(['', "<comment> $group hook </comment> : ".$groupData['description']]);
+
+            $process = new Process($groupData['command'], __DIR__ . '../../../../');
+            $process->setTimeout(null);
+            $output->writeln([" <comment>Executed command :</comment>",'']);
+            $output->writeln("  ".str_replace('&&', "&& \\ \n ", $groupData['command']));
+            $process->run();
+
+            $output->writeln([" <comment>Command Result :</comment>",'']);
+
+            $output->writeln($process->getOutput());
+
+            $exitCode = $process->getExitCode();
+            if (isset($groupData['exitcode']) && $groupData['exitcode'] != $exitCode) {
+                $output->writeln(" <error>$group : Exit Code for Hook ($exitCode) is different than expected (".$groupData['exitcode'].")</error>");
+                $error = true;
+            } else {
+                $output->writeln(" <info>$group : Success.</info>");
+            }
+
+        }
         $output->writeln(
             [
                 '',
@@ -88,5 +106,10 @@ class Handler extends Application
                 ''
             ]
         );
+
+        if ($error) {
+            return -1;
+        }
+        return 0;
     }
 }
