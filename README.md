@@ -8,7 +8,10 @@ Just create a `git-hooks.yml` file in your projects base directory, and fill it 
 config:
     commit-on-error : true # or false
 pre-commit:
-    phpunit:
+    # Simple command
+    - bin/phpcs
+    # or more complex command
+    - phpunit:
         description : 'Run PHPUnit'
         command : phpunit
         exitcode : 0

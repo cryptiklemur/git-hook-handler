@@ -63,7 +63,19 @@ class Handler extends Application
         }
 
         $output->writeln("<comment>Running $this->hook hook </comment>");
-        foreach ($this->categories[$this->hook] as $group => $groupData) {
+        $error = false;
+        foreach ($this->categories[$this->hook] as $hookItem) {
+            if (is_array($hookItem)) {
+                $group = key($hookItem);
+                $groupData = $hookItem[$group];
+            }
+            else {
+                $group = "Unnamed";
+                $groupData = [
+                    'description' => 'This hook was not named in git-hooks.yml file.',
+                    'command' => $hookItem
+                ];
+            }
 
             $output->writeln(['', "<comment> $group hook </comment> : ".$groupData['description']]);
 
@@ -71,30 +83,21 @@ class Handler extends Application
             $process->setTimeout(null);
             $output->writeln([" <comment>Executed command :</comment>",'']);
             $output->writeln("  ".str_replace('&&', "&& \\ \n ", $groupData['command']));
-            if ($process->run() === 1) {
-                $output->writeln(' Failed.');
-                $output->writeln("<error>{$command} failed</error>");
-                $output->writeln($process->getOutput());
-                $output->writeln("<error>{$command} failed</error>");
-
-                return 1;
-            }
+            $process->run();
 
             $output->writeln([" <comment>Command Result :</comment>",'']);
 
-            $output->writeln("  ".$process->getOutput());
+            $output->writeln($process->getOutput());
 
             $exitCode = $process->getExitCode();
             if (isset($groupData['exitcode']) && $groupData['exitcode'] != $exitCode) {
-                $output->writeln("<error>Result is different than expected. Exiting");
-                return -1;
+                $output->writeln(" <error>$group : Exit Code for Hook ($exitCode) is different than expected (".$groupData['exitcode'].")</error>");
+                $error = true;
+            } else {
+                $output->writeln(" <info>$group : Success.</info>");
             }
-            else {
-                $output->writeln(' Success.');
-                return 0;
-            }
-        }
 
+        }
         $output->writeln(
             [
                 '',
@@ -103,5 +106,10 @@ class Handler extends Application
                 ''
             ]
         );
+
+        if ($error) {
+            return -1;
+        }
+        return 0;
     }
 }
